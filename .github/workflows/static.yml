@@ -30,16 +30,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          # Upload entire repository
-          path: '.'
-      - name: Start local server
-        run: |
-          python3 -m http.server 8000 &
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages # Deploy to the gh-pages branch
+          folder: build    # Source folder containing the built files
+          build_script: npm run build # Script to build the project
